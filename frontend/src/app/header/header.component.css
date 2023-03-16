@@ -1,0 +1,19 @@
+
+  .toolbar {
+    position: absolute;
+    top: 0;
+    margin: 10px;
+    left: 0;
+    right: 0;
+    display:table-row;
+    align-items: center;
+    border-style: solid;
+    border-radius: 5px;
+    color: white;
+    font-weight: 600;
+  }
+
+  .imageContainer{
+    background-color: #dff9fa;
+  }
+  

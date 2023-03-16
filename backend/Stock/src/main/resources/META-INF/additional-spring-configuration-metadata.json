@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "DateFormat",
+  "type": "java.lang.String",
+  "description": "A description for 'DateFormat'"
+}]}

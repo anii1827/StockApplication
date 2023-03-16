@@ -1,0 +1,111 @@
+x-aws-vpc: "vpc-0d099a0b41f9757d3"
+x-aws-loadbalancer: "load-balancer"
+services: 
+ zookeeper:
+   image: 'bitnami/zookeeper:latest'
+   ports: 
+    - "2181:2181" 
+   environment:
+    - ALLOW_ANONYMOUS_LOGIN=yes 
+    
+ kafka:
+   image: 'bitnami/kafka:latest'
+   ports:
+    - "9092:9092" 
+   restart: always
+   environment:
+    - ALLOW_PLAINTEXT_LISTENER=yes
+    - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+   depends_on:
+    - zookeeper
+    
+ eureka-server:
+   image: anii1827/stockapplication-eurekaserver
+   ports:
+    - "8761:8761"
+ 
+ gatway:
+   image: anii1827/stockapplication-gatway:v4
+   ports:
+    - "8989:8989"
+   depends_on:
+    - eureka-server
+   links:
+    - eureka-server
+   restart: always
+   environment:
+    - EUREKA_URI=http://eureka-server:8761/eureka
+    - stock_aggregator_service=http://stockaggregator.desktop.local:8082
+    - auth_service=http://authentication.desktop.local:8084
+    - company_service=http://company.desktop.local:8080
+    - stock_service=http://stock.desktop.local:8081
+
+ authentication:
+   image: anii1827/stockapplication-authentication
+   ports: 
+    - "8084:8084"
+   depends_on:
+    - eureka-server
+   links:
+    - eureka-server
+   restart: always 
+   environment:
+    - EUREKA_URI=http://eureka-server:8761/eureka
+    
+ 
+ company:
+   image: anii1827/stockapplication-company
+   ports: 
+    - "8080:8080"
+   restart: always
+   links:
+    - eureka-server
+    - kafka
+    - zookeeper
+   environment:
+    - EUREKA_URI=http://eureka-server:8761/eureka
+    - KAFKA_BOOTSTRAP_SERVER=kafka:9092
+    - DATABASE_URI=jdbc:mysql://database-1.cekbhqjcibiw.us-east-1.rds.amazonaws.com:3306/companies
+    - DATABASE_USER=root
+    - DATABASE_PASSWORD=Xhej7456
+   depends_on:
+    - zookeeper
+    - kafka
+    - eureka-server
+    
+ stock:
+   image: anii1827/stockapplication-stock
+   ports: 
+    - "8081:8081"
+   restart: always
+   links:
+    - eureka-server
+    - kafka
+    - zookeeper
+   environment:
+    - EUREKA_URI=http://eureka-server:8761/eureka
+    - KAFKA_BOOTSTRAP_SERVER=kafka:9092
+    - DATABASE_URL=jdbc:mysql://database-1.cekbhqjcibiw.us-east-1.rds.amazonaws.com:3306/stocks
+    - DATABASE_USER=root
+    - DATABASE_PASSWORD=Xhej7456
+   depends_on:
+    - zookeeper
+    - kafka
+    - eureka-server
+    
+ stockaggregator:
+   image: anii1827/stockapplication-stockaggregator:v1
+   ports:
+    - 8082:8082
+   links:
+    - eureka-server
+   environment:
+    - EUREKA_URI=http://eureka-server:8761/eureka
+    - stock-service=stock:8081
+    - company-service=company:8080
+   depends_on:
+    - eureka-server
+    
+    
+   

@@ -1,0 +1,116 @@
+<app-header></app-header>
+
+<div class="content" role="main">
+    <div class="card-container">
+        <div>
+            <mat-card class="example-card">
+                <div class="container">
+                    <div class="left-container">
+                        <mat-card-title>WelCome Admin...</mat-card-title><br>
+                        <hr>
+                        <div class="registerPanel">
+                            <form [formGroup]="registerGroup" >
+                            <mat-card-subtitle>Register Company</mat-card-subtitle>
+                            <div style="display: flex;">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Company Name</mat-label>
+                                <input matInput formControlName="companyName">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" style="margin-left: 50px;"> 
+                                <mat-label>Company Code</mat-label>
+                                <input matInput formControlName="companyCode">
+                              </mat-form-field>
+                            </div>
+                            <div style="display: flex;">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>CEO</mat-label>
+                                    <input matInput formControlName="companyCeo">
+                                </mat-form-field>
+                                <mat-form-field appearance="fill" style="margin-left: 50px;"> 
+                                    <mat-label>Website</mat-label>
+                                    <input matInput formControlName="companyWebsite">
+                                  </mat-form-field>
+                            </div>
+                            <div style="display: flex;">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>TurnOver (Min 10cr)</mat-label>
+                                    <input matInput formControlName="companyTurnover">
+                                </mat-form-field>                             
+                                <mat-form-field appearance="fill" style="margin-left: 50px;">
+                                    <mat-label>Initial Price</mat-label>
+                                    <input matInput formControlName="companyInitialPrice">
+                                </mat-form-field>                             
+                            </div>
+                                <a mat-stroked-button (click)="Register()">Register</a>
+                            </form>
+                        </div><br>
+                        <hr>
+                        <form [formGroup]= "updateGroup">
+                        <div class="priceUpdatePanel">
+                            <mat-card-subtitle>Update Price</mat-card-subtitle>
+                            <mat-form-field appearance="fill">
+                                <mat-label>CompanyCode</mat-label>
+                                <input matInput formControlName="compCode">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" style="margin-left: 50px;"> 
+                                <mat-label>Price</mat-label>
+                                <input matInput formControlName="updatedprice">
+                              </mat-form-field><br>
+                            <a mat-stroked-button (click)="Update()">Update</a>
+                        </div>
+                        </form>
+                    </div>
+                   
+                    <div class="verticle-line"></div>
+
+                    <div class="right-container">
+                        <div class="table-content">
+                            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                                <!--- Note that these columns can be defined in any order.
+                                The actual rendered columns are set as a property on the row definition" -->
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="company" >
+                                    <th mat-header-cell *matHeaderCellDef> Company </th>
+                                    <td mat-cell *matCellDef="let element"> 
+                                        {{element.companyName}}
+                                     </td>
+                                </ng-container>
+
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="companyCode">
+                                    <th mat-header-cell *matHeaderCellDef>  CompanyCode </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.companyCode}} </td>
+                                </ng-container>
+
+                                <!-- Symbol Column -->
+                                <ng-container matColumnDef="price">
+                                    <th mat-header-cell *matHeaderCellDef> Price</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.price}}
+                                    </td>
+                                </ng-container>
+        
+                                <ng-container matColumnDef="delete">
+                                    <tr>
+                                        <th mat-header-cell *matHeaderCellDef> </th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <a mat-stroked-button (click)="deleteData(element)">delete</a>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" ></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                               
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+
+    <app-footer></app-footer>
+</div>
